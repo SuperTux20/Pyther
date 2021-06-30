@@ -4,6 +4,9 @@
 
 # Import pygame
 import pygame as g
+from pygame.mixer import music as m, Sound as s
+from time import sleep
+from sys import argv as args
 
 # Define height, width, and name
 SCR_NAME = "Pyther"
@@ -29,6 +32,15 @@ PNK = (255, 0, 127)
 clock = g.time.Clock()
 g.font.init()
 font = g.font.SysFont("Liberation Mono", 56)
+
+# Load music (remix of the main theme from Spy Vs Spy (1984) for the NES)
+g.mixer.init()
+m.load("sound/music.ogg")
+
+# Load sounds (all created in LMMS!)
+goal_sound = s("sound/goal.wav")
+win_sound = s("sound/win.wav")
+die_sound = s("sound/die.wav")
 
 
 class Game:
@@ -60,44 +72,70 @@ class Game:
         WIN = False
         direction = 1
 
-        player = PlayerChar(
-            160,
-            448,
-            64,
-            64,
-            64,
-            "player-fwd.png",
-            "player-bck.png",
-            "player-rgh.png",
-            "player-lft.png",
-        )
-        enemy0 = EnemyChar(8, 320, 64, 64, 2, "enemy-rgh.png", "enemy-lft.png")
-        enemy1 = EnemyChar(8, 192, 64, 64, 3, "enemy-rgh.png", "enemy-lft.png")
-        enemy2 = EnemyChar(8, 64, 64, 64, 4, "enemy-rgh.png", "enemy-lft.png")
+        try:
+            if args[1] == "--debug":
+                player = PlayerChar(
+                    160,
+                    0,
+                    64,
+                    64,
+                    64,
+                    "img/player/fwd.png",
+                    "img/player/bck.png",
+                    "img/player/rgh.png",
+                    "img/player/lft.png",
+                )
+            else:
+                player = PlayerChar(
+                    160,
+                    448,
+                    64,
+                    64,
+                    64,
+                    "img/player/fwd.png",
+                    "img/player/bck.png",
+                    "img/player/rgh.png",
+                    "img/player/lft.png",
+                )
+        except IndexError:
+            player = PlayerChar(
+                160,
+                448,
+                64,
+                64,
+                64,
+                "img/player/fwd.png",
+                "img/player/bck.png",
+                "img/player/rgh.png",
+                "img/player/lft.png",
+            )
+        enemy0 = EnemyChar(8, 320, 64, 64, 2, "img/enemy/rgh.png", "img/enemy/lft.png")
+        enemy1 = EnemyChar(8, 192, 64, 64, 3, "img/enemy/rgh.png", "img/enemy/lft.png")
+        enemy2 = EnemyChar(8, 64, 64, 64, 4, "img/enemy/rgh.png", "img/enemy/lft.png")
         enemies = [enemy0, enemy1, enemy2]
         goals = []
         if self.active_goals[0]:
-            goal0 = GameOBJ(0, 0, 64, 64, 0, "treasure.png")
+            goal0 = GameOBJ(0, 0, 64, 64, 0, "img/treasure.png")
             goals.append(goal0)
         else:
             goals.append(None)
         if self.active_goals[1]:
-            goal1 = GameOBJ(80, 0, 64, 64, 0, "treasure.png")
+            goal1 = GameOBJ(80, 0, 64, 64, 0, "img/treasure.png")
             goals.append(goal1)
         else:
             goals.append(None)
         if self.active_goals[2]:
-            goal2 = GameOBJ(160, 0, 64, 64, 0, "treasure.png")
+            goal2 = GameOBJ(160, 0, 64, 64, 0, "img/treasure.png")
             goals.append(goal2)
         else:
             goals.append(None)
         if self.active_goals[3]:
-            goal3 = GameOBJ(240, 0, 64, 64, 0, "treasure.png")
+            goal3 = GameOBJ(240, 0, 64, 64, 0, "img/treasure.png")
             goals.append(goal3)
         else:
             goals.append(None)
         if self.active_goals[4]:
-            goal4 = GameOBJ(320, 0, 64, 64, 0, "treasure.png")
+            goal4 = GameOBJ(320, 0, 64, 64, 0, "img/treasure.png")
             goals.append(goal4)
         else:
             goals.append(None)
@@ -161,6 +199,8 @@ class Game:
                     text = font.render("You lose :(", True, BLK)
                     self.SCR.blit(text, (0, 192))
                     g.display.update()
+                    m.stop()
+                    die_sound.play()
                     clock.tick(1)
                     break
             for j in range(len(goals)):
@@ -172,6 +212,7 @@ class Game:
                         self.SCR.blit(text, (0, 192))
                         self.active_goals[j] = False
                         g.display.update()
+                        goal_sound.play()
                         clock.tick(1)
                         break
                 elif (
@@ -190,6 +231,9 @@ class Game:
                     text = font.render(":D", True, BLU)
                     self.SCR.blit(text, (160, 250))
                     g.display.update()
+                    m.stop()
+                    win_sound.play()
+                    sleep(win_sound.get_length())
                     clock.tick(1)
                     break
 
@@ -315,7 +359,8 @@ class EnemyChar(GameOBJ):
 g.init()
 
 # Start a new game. The array of Trues determined which treasure chests are enabled.
-newGame = Game(SCR_NAME, SCR_W, SCR_H, [True, True, True, True, True], "bg.png")
+newGame = Game(SCR_NAME, SCR_W, SCR_H, [True, True, True, True, True], "img/bg.png")
+m.play(5760)  # A 15-second audio piece, looping for 24 hours. LMAO
 newGame.game_loop()
 
 g.quit()
