@@ -1,6 +1,6 @@
 # Pyther
 
-## An extremely basic Frogger clone built in Python
+## An extremely basic Frogger clone built in Pygame
 
 ## HOW TO PLAY
 
