@@ -19,6 +19,6 @@
 
 ### NOTES
 
-Background image uses three textures from Minecraft (`grass_block_top`, `grass_path_top`, `cobblestone`). Minecraft belongs to Microsoft and Mojang AB.
+Background image uses three textures from Minecraft (`grass_block_top`, `dirt_path_top`, `cobblestone`). Minecraft belongs to Microsoft and Mojang AB.
 
 Background music is a remix of the main theme from Spy Vs Spy (1984), a game for the Nintendo Entertainment System.
