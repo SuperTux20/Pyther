@@ -5,7 +5,7 @@
 ## HOW TO PLAY
 
 1. Clone this repo
-2. Run `Pyther.py`
+2. Run `game.py`
 3. Press SPACE to move in the direction you're facing
 4. Use the arrow keys or WASD to turn
 5. Avoid the blue snakes
