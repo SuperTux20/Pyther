@@ -2,7 +2,6 @@
 import pygame as g
 from pygame.mixer import music as m, Sound as s
 from time import sleep
-from sys import argv as args
 
 g.mixer.init()
 m.load("sound/music.ogg")
@@ -62,7 +61,7 @@ class Game:
         WIN = False
         direction = 1
         try:
-            if args[1] == "--debug":
+            if __import__("sys").argv[1] == "--debug":
                 player = PlayerChar(
                     160,
                     0,
